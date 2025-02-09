@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -30,25 +31,9 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 221.2 83.2% 53.3%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -61,7 +46,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -78,15 +63,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 224.3 76.3% 48%;
   }
 }
 
@@ -94,8 +71,61 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.calendar-container {
+  --fc-border-color: hsl(var(--border));
+  --fc-today-bg-color: hsl(var(--primary) / 0.1);
+  --fc-event-bg-color: hsl(var(--primary));
+  --fc-event-border-color: hsl(var(--primary));
+  --fc-event-text-color: hsl(var(--primary-foreground));
+  --fc-button-text-color: hsl(var(--primary));
+  --fc-button-bg-color: transparent;
+  --fc-button-border-color: hsl(var(--border));
+  --fc-button-hover-bg-color: hsl(var(--primary) / 0.1);
+  --fc-button-hover-border-color: hsl(var(--primary));
+  --fc-button-active-bg-color: hsl(var(--primary));
+  --fc-button-active-border-color: hsl(var(--primary));
+  --fc-button-active-text-color: hsl(var(--primary-foreground));
+}
+
+.calendar-container .fc-event {
+  @apply cursor-pointer transition-opacity hover:opacity-80;
+}
+
+.calendar-container .fc-event-main {
+  @apply p-2;
+}
+
+.calendar-container .fc-toolbar-title {
+  @apply text-xl font-semibold;
+}
+
+.calendar-container .fc-button {
+  @apply text-sm font-medium transition-colors;
+}
+
+.calendar-container .fc-button-primary:not(:disabled):active,
+.calendar-container .fc-button-primary:not(:disabled).fc-button-active {
+  @apply bg-primary text-primary-foreground;
+}
+
+.calendar-container .fc-timegrid-slot,
+.calendar-container .fc-timegrid-axis {
+  @apply h-12;
+}
+
+.calendar-container .fc-timegrid-now-indicator-line {
+  @apply border-red-500;
+}
+
+.calendar-container .fc-timegrid-now-indicator-arrow {
+  @apply border-red-500;
+}
+
+.calendar-container .fc-list-day-cushion {
+  @apply bg-muted;
 }
