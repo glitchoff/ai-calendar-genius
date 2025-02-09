@@ -103,7 +103,6 @@ export function Calendar() {
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
               headerToolbar={false}
               initialView={currentView}
-              view={currentView}
               editable={true}
               selectable={true}
               selectMirror={true}
