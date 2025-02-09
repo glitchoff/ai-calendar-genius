@@ -15,6 +15,7 @@ export function ChatWithAI({ onAddEvent }: ChatWithAIProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [suggestedEvent, setSuggestedEvent] = useState<CalendarEvent | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,6 +23,7 @@ export function ChatWithAI({ onAddEvent }: ChatWithAIProps) {
     if (!message.trim()) return;
 
     try {
+      setIsLoading(true);
       const apiKey = localStorage.getItem('apiKey');
       if (!apiKey) {
         toast({
@@ -32,24 +34,64 @@ export function ChatWithAI({ onAddEvent }: ChatWithAIProps) {
         return;
       }
 
-      // Example response structure
-      const mockResponse = {
+      const prompt = `Create a calendar event based on this request: "${message}". 
+      Respond with a JSON object that has these properties:
+      - title (string)
+      - description (string)
+      - start (ISO date string)
+      - end (ISO date string)
+      - priority ("high", "medium", or "low")
+      Make the dates realistic and close to the current time.`;
+
+      const response = await fetch('https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: prompt
+            }]
+          }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from Gemini');
+      }
+
+      const data = await response.json();
+      const generatedText = data.candidates[0].content.parts[0].text;
+      
+      // Extract JSON from the response
+      const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('Invalid response format');
+      }
+
+      const eventData = JSON.parse(jsonMatch[0]);
+      const suggestion: CalendarEvent = {
         id: crypto.randomUUID(),
-        title: "Meeting with Team",
-        start: new Date(),
-        end: new Date(Date.now() + 3600000),
-        description: "Discuss project updates",
-        priority: "medium" as const
+        title: eventData.title,
+        description: eventData.description,
+        start: new Date(eventData.start),
+        end: new Date(eventData.end),
+        priority: eventData.priority as "high" | "medium" | "low"
       };
 
-      setSuggestedEvent(mockResponse);
+      setSuggestedEvent(suggestion);
       setMessage('');
     } catch (error) {
+      console.error('Error:', error);
       toast({
         title: "Error",
-        description: "Failed to process your request",
+        description: "Failed to process your request. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -85,7 +127,7 @@ export function ChatWithAI({ onAddEvent }: ChatWithAIProps) {
       {isOpen && (
         <Card className="w-80 p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold">Chat with AI</h3>
+            <h3 className="font-semibold">Chat with Gemini AI</h3>
             <Button
               variant="ghost"
               size="icon"
@@ -131,8 +173,9 @@ export function ChatWithAI({ onAddEvent }: ChatWithAIProps) {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Ask AI to create an event..."
                 className="flex-1"
+                disabled={isLoading}
               />
-              <Button type="submit" size="icon">
+              <Button type="submit" size="icon" disabled={isLoading}>
                 <Plus className="h-4 w-4" />
               </Button>
             </form>
