@@ -11,6 +11,7 @@ import { Calendar as CalendarIcon, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { EventModal } from './EventModal';
 import { ViewSelector } from './ViewSelector';
+import { ChatWithAI } from './ChatWithAI';
 
 export interface CalendarEvent {
   id: string;
@@ -128,6 +129,8 @@ export function Calendar() {
         onSave={handleEventSave}
         onDelete={handleEventDelete}
       />
+
+      <ChatWithAI onAddEvent={handleEventSave} />
     </div>
   );
 }
