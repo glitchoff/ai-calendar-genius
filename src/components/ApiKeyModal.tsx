@@ -16,7 +16,7 @@ export function ApiKeyModal() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const savedApiKey = localStorage.getItem('apiKey');
+    const savedApiKey = localStorage.getItem('apiKey') || "AIzaSyDi7sG_kPWC8uKSjqRGb5vXmMqqyO9Q__Q";
     if (!savedApiKey) {
       setIsOpen(true);
     }
