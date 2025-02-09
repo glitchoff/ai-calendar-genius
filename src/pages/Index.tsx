@@ -1,11 +1,11 @@
 
 import { Calendar } from "@/components/calendar/Calendar";
-import { ApiKeyForm } from "@/components/ApiKeyForm";
+import { ApiKeyModal } from "@/components/ApiKeyModal";
 
 const Index = () => {
   return (
     <div className="space-y-8">
-      <ApiKeyForm />
+      <ApiKeyModal />
       <Calendar />
     </div>
   );

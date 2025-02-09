@@ -113,11 +113,6 @@ export function Calendar() {
               eventClick={handleEventClick}
               eventDrop={handleEventDrop}
               height="100%"
-              className={cn(
-                "calendar-container",
-                "rounded-lg overflow-hidden",
-                "border border-gray-200 dark:border-gray-700"
-              )}
             />
           </div>
         </div>
